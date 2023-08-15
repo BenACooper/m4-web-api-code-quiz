@@ -14,7 +14,7 @@ var questionsArray = [
   {
     question:
       "The condition in an if / else statement is enclosed within ____.",
-    Answers: ["quotes", "curly brackets", "parentheses", "square brackets"],
+    answers: ["quotes", "curly brackets", "parentheses", "square brackets"],
     correctAnswer: 3,
   },
   {
@@ -30,13 +30,13 @@ var questionsArray = [
   {
     question:
       "String values must be enclosed within _____ when being assigned to variables",
-    Answers: ["commas", "curly brackets", "quotes", "parantheses"],
+    answers: ["commas", "curly brackets", "quotes", "parantheses"],
     correctAnswer: 3,
   },
   {
     question:
       "A very useful tool used during development and debugging for printing content to be debugger is:",
-    Answers: ["JavaScript", "terminal / bash", "for loops", "console.log"],
+    answers: ["JavaScript", "terminal / bash", "for loops", "console.log"],
     correctAnswer: 4,
   },
 ];
@@ -47,9 +47,9 @@ var titleContainerEl = document.getElementById("questionContainer");
 var buttonContainerEl = document.getElementById("buttonContainer");
 var titleEl = "";
 var buttonEl = "";
-var currentQuestion = "";
+var chosenQuestion = "";
 
-//Basic fuction to intialize the game. Initally the header and button elements display the game title and a start button rather than questions and answers. The "startGame" function is called upon user clicking buttonEl, which starts the timer & start presenting questions.
+//Basic fuction to intialize the game. Initally the header and button elements display the game title and a  tart button rather than questions and answers. The "startGame" function is called upon user clicking buttonEl, wh ch starts the timer & start presenting questions.
 function init() {
   titleEl = document.createElement("h1");
   buttonEl = document.createElement("button");
@@ -82,32 +82,30 @@ function startTimer() {
   }, 1000);
 }
 
-//Declare a function to choose a random questios from the questionsArray.
+//Declare a function to choose a random object from the questionsArray.
 function chooseQuestion() {
   for (var i = 0; i < questionsArray.length; i++) {
-    questionsIndex = Math.floor(Math.random() * questionsArray.length);
-    currentQuestion = questionsArray[questionsIndex];
+    randomQuestionIndex = Math.floor(Math.random() * questionsArray.length);
+    chosenQuestion = questionsArray[randomQuestionIndex];
   }
-  return currentQuestion;
+  return chosenQuestion;
 }
 
 //Declare a function to reset the divs, choose a random question, and present it to the user. It will be called any time the user pushes a button in the buttonContainer div so hopefully this function works until the quiz is complete.
 function nextQuestion() {
+    titleContainerEl.removeChild(titleEl)
+
     chooseQuestion()
 
-    titleContainerEl.removeChild(titleEl)
-    buttonContainerEl.removeChild(buttonEl)
-
     titleEl = document.createElement("h1");
-    buttonEl = document.createElement("button");
-
-    titleEl.textContent = "Question: " + currentQuestion.question
-
-    for (var i2 = i2 < currentQuestion.answers.length; i2++) {
-        var buttonEl = document.createElement("button";
-        buttonEl.textContent = currentQuestion.answer[i];)
-        
-    }
-
+    titleEl.textContent = "Question: " + chosenQuestion.question;
     titleContainerEl.appendChild(titleEl);
+
+    buttonEl = document.createElement("button")
+    buttonEl.textContent = chosenQuestion.answers
 }
+
+// function nextAnswers() {
+//     buttonContainerEl.removeChild(buttonEl)
+//     buttonEl = document.createElement("button");
+//     for (var i = 0; i < answers.length)
