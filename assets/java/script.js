@@ -4,22 +4,46 @@
 // - Game ends when all questions are answered or timer reaches 0.
 // - Once game is over I can save my initials and score.
 
-//Create the questions: Declare variable for the displayed quiz question. There are multiple questions, so they will be contained in an array to choose from randomlly. There are multiple answers to each question, so each item in the array must also be an object containing its own array.
+//initFunction
+//startTimerFunction//questionFunction
+//checkAnswerFunction
+//questionFunction
+//repeat
+//endQuizFunction
+
+//Declare global varibles.
+var timerEl = document.getElementById("timer");
+var viewScoresEl = document.getElementById("viewHighscores");
+var introContainerEl = document.getElementById("introContainer");
+var quizContainerEl = document.getElementById("quizContainer");
+var outroContainerEl = document.getElementById("outroContainer");
+var scoreContainerEl = document.getElementById("scoreContainer");
+var scoreList = document.getElementById("scoresList")
+var scoresArray = [];
+var clearButtonEl = document.getElementById("clearScores");
+var startButtonEl = document.getElementById("startButton");
+var submitButtonEl = document.getElementById("submitButton");
+var goBackButtonEl = document.getElementById("goBack");
+var clarButton = document.getElementById("clearButton");
+var userInitials;
+var timeRemaining = 60;
+var pagesIndex = 0;
+var score;
 var pagesArray = [
   {
     question: "Commonly used data types DO NOT include:",
-    answers: ["Strings", "Booleans", "Alerts", "Numbers"],
+    choices: ["Strings", "Booleans", "Alerts", "Numbers"],
     correctAnswer: 2,
   },
   {
     question:
       "The condition in an if / else statement is enclosed within ____.",
-    answers: ["quotes", "curly brackets", "parentheses", "square brackets"],
+    choices: ["quotes", "curly brackets", "parentheses", "square brackets"],
     correctAnswer: 2,
   },
   {
     question: "Arrays in JavaScript can be used to store _____.",
-    answers: [
+    choices: [
       "numbers and strings",
       "other arrays",
       "booleans",
@@ -30,120 +54,140 @@ var pagesArray = [
   {
     question:
       "String values must be enclosed within _____ when being assigned to variables",
-    answers: ["commas", "curly brackets", "quotes", "parantheses"],
+    choices: ["commas", "curly brackets", "quotes", "parantheses"],
     correctAnswer: 2,
   },
   {
     question:
       "A very useful tool used during development and debugging for printing content to be debugger is:",
-    answers: ["JavaScript", "terminal / bash", "for loops", "console.log"],
+    choices: ["JavaScript", "terminal / bash", "for loops", "console.log"],
     correctAnswer: 3,
   },
 ];
 
-//Declare global varibles including those equating to HTML elements.
-var timerEl = document.getElementById("timer");
-var titleContainerEl = document.getElementById("titleContainer");
-var buttonContainerEl = document.getElementById("buttonContainer");
-var buttonEl = "";
-var randomPage = "";
-var trueAnswers = 0
-var falseAnswers = 0
-
-//initFunction 
-//startTimerFunction//questionFunction
-//checkAnswerFunction
-//questionFunction
-//repeat
-//endQuizFunction
-var startButton = document.getElementById('startButton')
-
-//Basic fuction to intialize the game. Initally the header and button elements display the game title and a start button. The "startGame" function is called upon user clicking buttonEl, wh ch starts the timer & start presenting questions.
+//Declare fuction to start the quiz. Invoked when user presses startButton.
 function init() {
-  // var startTitleEl = document.createElement("h1");
-  // var startButton = document.createElement("button");
-  // startButton.setAttribute("class", "start-button")
-  // startButtonEl = querySelectorAll(".start-button")
-  // startTitleEl.textContent = "Coding Quiz Challenge!";
-  // startButton.textContent = "Start Quiz!";
-  var introEl = document.getElementById('intro')
-  introEl.setAttribute('class', 'hide')
-  // titleContainerEl.appendChild(startTitleEl);
-  // buttonContainerEl.appendChild(startButton);
-  var timeRemaining = 60;
-  var interval = setInterval(startTimer, 1000)
-  timerEl.textContent = "Seconds Remaining: " + timeRemaining;
-  // startButton.addEventListener("click", function () {
-    // startTimer();
-    nextQuestion();
-  // });
+  timeRemaining = 60;
+  pagesIndex = 0;
+  introContainerEl.setAttribute("class", "hide");
+  startTimer();
+  displayQuiz();
+  nextPage(pagesIndex);
 }
-  startButton.addEventListener("click", init)
+startButtonEl.addEventListener("click", init);
 
-// init();
-
-//Declare a function to start the timer when the "Start Quiz" button is clicked.
+//Declare function to start the countdown.
 function startTimer() {
-
-  // var timeInterval = setInterval(function () {
+  timeInterval = setInterval(function () {
     timeRemaining--;
-    timerEl.textContent = "Seconds Remaining: " + timeRemaining;
-
+    timerEl.textContent = "Time: " + timeRemaining;
     if (timeRemaining === 0) {
       clearInterval(timeInterval);
     }
-  // }, 1000);
+  }, 1000);
+
+  return timeInterval;
 }
 
-//Declare a function to choose a random object from the pagesArray when the button element is clicked.
-function choosePage() {
-  for (var i = 0; i < pagesArray.length; i++) {
-    randomPageIndex = Math.floor(Math.random() * pagesArray.length);
-    randomPage = pagesArray[randomPageIndex];
-  }
-  return randomPage;
+// Declare functions to hide the current container and display the next one.
+//Invoked when the startButton is pushed.
+function displayQuiz() {
+  introContainerEl.setAttribute("class", "hide");
+  quizContainerEl.setAttribute("class", null);
 }
 
-//Declare a function to empty the container divs, invoke the choosePage function, and then fill the containers with a new title and buttons derived from randomPage object.
-function nextQuestion() {
-    titleContainerEl.removeChild(startTitleEl)
-    buttonContainerEl.removeChild(buttonEl)
-
-    choosePage()
-
-    titleEl = document.createElement("h1");
-    titleEl.textContent = "Question: " + randomPage.question;
-    titleContainerEl.appendChild(titleEl);
-
-    for (var i = 0; i < randomPage.answers.length; i++) {
-      var buttonText = randomPage.answers[i];
-      var answerButton = document.createElement("button");
-      answerButton.textContent = buttonText
-      answerButton.setAttribute("data-index", i)
-      buttonContainerEl.appendChild(answerButton)
-
-      answerButton.addEventListener("click", function(event) {
-        var answersIndex = parseInt(event.target.getAttribute("data-index"));
-        checkAnswer(answersIndex, randomPage.correctAnswer);
-      })
-    }
+// Invoked when choiceButton is clicked, and the end of pagesArray has been reached..
+function displayOutro() {
+  quizContainerEl.setAttribute("class", "hide");
+  outroContainerEl.setAttribute("class", null);
+  clearInterval(timeInterval);
+  score = timeRemaining;
+  var scoreSpan = document.getElementById("score");
+  scoreSpan.textContent = score;
 }
 
-//Decare a function to check if the index of the button pressed by user matches the correctAnswer value from the randomPage object.
-function checkAnswer(num1, num2) {
-  
-  if (num1 === num2) {
-      console.log("Correct!");
-      trueAnswers++
+// Invoked when the submitButton is clicked.
+function displayScores() {
+  saveInitials() 
+  outroContainerEl.setAttribute("class", "hide");
+  scoreContainerEl.setAttribute("class", null);
+  var liEl = document.createElement("li")
+  liEl.textContent = userInitials + "-" + score;
+  scoreList.appendChild(liEl);
+}
+submitButtonEl.addEventListener("click", displayScores)
+
+// Invoked when the goBack button is clicked.
+function displayIntro() {
+  scoreContainerEl.setAttribute("class", "hide");
+  introContainerEl.setAttribute("class", null);
+  timeRemaining = 60;
+  timerEl.textContent = "Time: " + timeRemaining;
+}
+goBackButtonEl.addEventListener("click", displayIntro)
+
+
+//Invoked when the startQuiz button is clicked, or when a choiceButton is clicked while the pagesIndex is less than the pagesArray.
+function nextPage(pagesIndex) {
+  var quizQuestions = document.getElementById("quizQuestions");
+  var choicesContainerEl = document.getElementById("choicesContainer");
+
+  if (pagesIndex < pagesArray.length) {
+    quizQuestions.textContent = pagesArray[pagesIndex].question;
+    choicesContainerEl.innerHTML = "";
+    createQuizButtons(pagesArray[pagesIndex].choices);
   } else {
-      console.log("Incorrect!");
-      falseAnswers++
+    displayOutro();
   }
-  // You can also proceed to the next question here
-  nextQuestion();
 }
 
-// function nextAnswers() {
-//     buttonContainerEl.removeChild(buttonEl)
-//     buttonEl = document.createElement("button");
-//     for (var i = 0; i < answers.length)
+//Declare a function to create buttons from the choices array. Invoked by the nextPage function.
+function createQuizButtons(choices) {
+  var choicesContainerEl = document.getElementById("choicesContainer");
+
+  for (var i = 0; i < choices.length; i++) {
+    var choiceButton = document.createElement("button");
+    choiceButton.textContent = choices[i];
+    choiceButton.setAttribute("data-index", i);
+
+    choiceButton.addEventListener("click", function (event) {
+      var choiceIndex = parseInt(event.target.getAttribute("data-index"));
+      checkAnswer(choiceIndex, pagesArray[pagesIndex].correctAnswer);
+    });
+    choicesContainerEl.appendChild(choiceButton);
+  }
+  return choicesContainerEl;
+}
+
+//Declare a function to check if the clicked button equates to the correct answer, and reduce the time if it doesn't.
+function checkAnswer(choiceIndex, correctAnswer) {
+  if (choiceIndex !== correctAnswer) {
+    console.log("Incorrect!");
+    timeRemaining -= 10;
+  } else if (choiceIndex === correctAnswer) {
+    console.log("Correct!");
+  }
+  pagesIndex++;
+  nextPage(pagesIndex);
+}
+
+//Declare a function to save user initials locally. Invoke when score page is displayed.
+function saveInitials() {
+  var initialsInputEl = document.getElementById("initialsInput");
+  userInitials = initialsInputEl.value;
+  localStorage.setItem("userInitials", userInitials);
+  localStorage.setItem("userSCore", score)
+}
+
+//Declare a function to display the initals and score.
+
+
+//Declare a function to clear the scores by removing the <li> elements from the scoresList.
+function clearScores() {
+  var liElements = scoreList.getElementsByTagName("li");
+
+  for (var i = liElements.length - 1; i >= 0; i--) {
+    scoreList.removeChild(liElements[i]);
+  }
+}
+clearButtonEl.addEventListener("click", clearScores)

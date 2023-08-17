@@ -5,29 +5,35 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 
 <body>
 
     <header>
-        <h1>View Highscores</h1>
-        <h2 id="timer">Seconds Remainin</h2>
+        <h1 id="viewHighscores">View Highscores</h1>
+        <h2 id="timer">Time:</h2>
     </header>
 
     <main>
-        <div id="intro">
-            <h1>Coding Quiz</h1>
-            <p>Do this quiz.</p>
+        <div id="introContainer">
+            <h3>Coding Quiz Challenge</h1>
+            <p>Try to answer the follpwing code-related questions within the time limit. Keep in mind that incorrect answers will penalie your score/time by ten seconds!</p>
             <button id="startButton">Start Quiz!</button>
         </div>
-        <div id="titleContainer" class="hide">
-            <h2 id="question"></h2>
-            <div id="options"></div>
+        <div id="quizContainer" class="hide">
+            <h4 id="quizQuestions"></h2>
+            <div id="choicesContainer"></div>
         </div>
-        <div id="outro" class ="hide">
-            <h3>All Done!</h3>
+        <div id="outroContainer" class="hide">
+            <h5>All Done!</h3>
             <p>Your final score:<span id="score"></span></p>
-            <p>Enter Initials: <input type="text" width="3"><button>Submit</button></p>
+            <p>Enter Initials: <input type="text" width="3" id="initialsInput"><button id="submitButton">Submit</button></p>
+        </div>
+        <div id="scoreContainer" class="hide">
+            <ul id="scoresList">Highscores</ul>
+            <button id="goBack">Go Back</button>
+            <button id="clearScores">Clear Scores</button>
         </div>
     </main>
 
